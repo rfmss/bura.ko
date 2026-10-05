@@ -8,7 +8,13 @@ Ambiente Linux x86_64, Java 17.0.20, compilador Kotlin 2.1.20, stubs Android SDK
 
 Compilação direta de todos os fontes Kotlin do núcleo e Android com `android.jar` API 35: PASSOU. Avisos de APIs antigas de insets são esperados para compatibilidade com API 23; isto não substitui empacotamento, lint ou teste visual.
 
-Gradle/empacotamento/lint: em verificação durante esta entrega; resultado final será registrado antes do fechamento. O wrapper inicialmente encontrou rede direta indisponível no ambiente, depois timeout no download via proxy. O compilador independente permitiu verificar o código enquanto a distribuição Gradle era obtida pelo caminho de download disponível.
+`:core:check :app:assembleDebug :app:lintDebug`: PASSOU, 49 tarefas, build completo em 2 min 2 s após preparar dependências. Lint: 0 erros e 9 avisos (8 sobre textos ainda fora de resources para tradução; 1 sobre regras de extração/backup Android 12+). O MVP está em português; centralizar textos e definir exclusões explícitas de transferência/backup antes de adicionar persistência de partidas em M2. Não foram suprimidos avisos para obter este resultado.
+
+APK debug: **867.569 bytes (847,24 KiB)**, `minSdk 23`, `targetSdk 35`. `aapt dump badging` confirmou somente permissões Bluetooth, sem INTERNET. `apksigner verify --verbose` validou assinaturas v1 e v2, incluindo o esquema necessário para API 23. SHA-256 local: `4898134d64ff2d3775c825191bcd2043e9762fe86aad3c548c7a2212ecaf2ffb`. A chave é debug local; um APK do CI terá outra assinatura/hash. Tamanho de debug não é medição de memória nem resultado release.
+
+Ambiente: o wrapper inicialmente encontrou rede direta indisponível e timeout via proxy. A distribuição oficial foi baixada com seu SHA-256 conferido; foi necessário preparar JDK 17 completo (o Java inicial não tinha javac), configurar o proxy e usar o truststore de certificados do próprio ambiente. Nenhuma dessas configurações de máquina foi incluída no repo e a validação TLS não foi desativada.
+
+CI: primeira execução falhou no setup Android porque o pacote padrão `tools` deixou de existir. Corrigido para instalar explicitamente `platform-tools`, `platforms;android-35` e `build-tools;35.0.0`; evitadas execuções duplicadas de push e PR. A execução corrigida estava na fila em 2026-10-05 durante o fechamento; não é contada como aprovada. Build/lint aprovados acima são locais. Acompanhar o resultado e o artefato no PR https://github.com/rfmss/bura.ko/pull/1.
 
 Revisão de concorrência: identificado e corrigido o caso de timeout cancelado já aguardando o lock. Cada agendamento tem época própria; um callback antigo não encerra uma sessão que acabou de confirmar ou uma sonda nova. Geração de conexão também descarta callbacks e threads de sessões anteriores.
 
