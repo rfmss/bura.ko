@@ -30,5 +30,6 @@ object GameCodec {
         GameState(id, revision, hands, dead, stock, discard, listOf(flat.take(first), flat.drop(first)), took, turn, drew, phase, totals, scores, finisher, sequences, votes).also(GameEngine::validate)
     }
     fun command(command: GameCommand): ByteArray = out { writeInt(MAGIC); writeInt(command.revision); writeInt(command.sequence); writeByte(command.action.ordinal); writeByte(command.meld); writeByte(command.cards.size); command.cards.forEach { writeByte(it) } }
-    fun readCommand(bytes: ByteArray): GameCommand = input(bytes) { require(readInt() == MAGIC); val revision = readInt(); val sequence = readInt(); val action = GameAction.entries[readUnsignedByte()]; val meld = readByte(); val cards = List(readUnsignedByte()) { readUnsignedByte() }; GameCommand(revision, sequence, action, cards, meld) }
+    fun readCommand(bytes: ByteArray): GameCommand = input(bytes) { require(readInt() == MAGIC); val revision = readInt(); val sequence = readInt(); val action = GameAction.entries[readUnsignedByte()]; val meld = readByte().toInt(); val cards = List(readUnsignedByte()) { readUnsignedByte() }; GameCommand(revision, sequence, action, cards, meld) }
 }
+
