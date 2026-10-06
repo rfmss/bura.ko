@@ -20,11 +20,13 @@ Revisão de concorrência: identificado e corrigido o caso de timeout cancelado 
 
 ## Não executado / não reivindicado
 
-Não há dois aparelhos Bluetooth acessíveis neste ambiente. Pareamento, OEMs, rádio, diálogos de permissão, visual, TalkBack, rotações, morte real de processo e métricas de memória/fluidez/inicialização ainda precisam de hardware. O app já contém o motor de turnos, persistência de partida e modo pass-and-play local. Reconectar o diagnóstico abre uma conexão nova, não restaura uma partida compartilhada entre aparelhos.
+Não há dois aparelhos Bluetooth acessíveis neste ambiente. Pareamento, OEMs, rádio, diálogos de permissão, visual, TalkBack, rotações, morte real de processo e métricas de memória/fluidez/inicialização ainda precisam de hardware. A partida Bluetooth está implementada, mas reconexão/retomada após saída ou morte de processo ainda não faz parte do protótipo.
 
 ## Executado em 2026-10-06
 
 Após a implementação do motor e do modo local, o CI passou em `:core:check`, `:app:assembleDebug` e `:app:lintDebug`. O artefato `burako-debug` foi publicado no workflow 37405343942, associado ao commit `140dc2a782b9c8a32a4bc71422efed43022f1b4a`; tamanho do ZIP 886.527 bytes. O APK pode ser baixado na execução do workflow. O checksum do artefato remoto é `sha256:618abb69f639003436660bebd9dd6d98a9a55e7d6425dedcd6c17deef593e57c7`.
+
+Após a integração da partida Bluetooth (host autoritativo, projeção filtrada para o convidado e comandos enquadrados pelo protocolo), o CI passou novamente em `:core:check`, `:app:assembleDebug` e `:app:lintDebug` no workflow **37406839988**, commit `4da89a967442831e9662cf2c37d61e67a0f2a65f`. O artefato `burako-debug` foi publicado (ID `11387737676`, expira em 2026-10-13; SHA-256 do ZIP `b323f81eb927b0a2303c25ef421a8d8c29488943793badbd21929627dfb5ebc`).
 
 ## Roteiro físico obrigatório para M0
 
@@ -38,4 +40,4 @@ Após a implementação do motor e do modo local, o CI passou em `:core:check`, 
 
 ## Próxima implementação
 
-Motor de turnos conforme REGRAS.md, testes de todas as zonas e atomicidade, projeção filtrada por jogador; em seguida armazenamento transacional e integração Bluetooth. A prova física M0 permanece gate para investir em arte final e declarar multiplayer validado.
+Executar a prova física M0, corrigir diferenças de OEM/permissões e medir conexão/RTT. Depois, adicionar reconexão/retomada transacional e só então investir em arte final e declarar multiplayer validado.

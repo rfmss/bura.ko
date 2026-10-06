@@ -2,7 +2,7 @@
 
 Buraco presencial para duas pessoas, cada uma no próprio Android, via Bluetooth e sem internet.
 
-**Estado: protótipo jogável 0.2.** O núcleo já executa partidas completas e o app inclui um modo pass-and-play no mesmo celular, com persistência local. O diagnóstico Bluetooth continua disponível para validar o rádio; a sincronização da partida entre dois aparelhos é o próximo incremento.
+**Estado: protótipo jogável 0.3.** O núcleo executa partidas completas; o app tem modo pass-and-play com persistência local e partida compartilhada offline via Bluetooth Classic. O anfitrião mantém o estado autoritativo; o convidado recebe uma projeção filtrada e envia apenas comandos validados.
 
 ## Compilar
 
@@ -26,9 +26,11 @@ Os testes são executáveis JVM sem biblioteca de teste extra; `:core:verifyCore
 
 Para jogar agora sem esperar a validação do rádio, abra **Jogar no mesmo celular**. A capa alterna entre as pessoas, evitando expor a mão adversária; compra, descarte, sequências, morto, canastras, batida, pontuação e salvamento já funcionam.
 
-Para testar Bluetooth, instale o mesmo APK em dois Androids com Bluetooth Classic. Pareie os celulares nas configurações e finalize a busca. Desligue Wi-Fi e dados móveis, mantendo Bluetooth ativo. Abra o app nos dois: um escolhe **Receber conexão**, o outro **Entrar na conexão**, ambos selecionando o par correto. Conceda acesso a dispositivos próximos se solicitado. Quando a conexão for confirmada, toque em **Testar ida e volta**. O rádio está validado; a partida compartilhada entre aparelhos ainda está em integração.
+Para jogar via Bluetooth, instale o mesmo APK em dois Androids com Bluetooth Classic. Pareie os celulares nas configurações e finalize a busca. Desligue Wi-Fi e dados móveis, mantendo Bluetooth ativo. Abra o app nos dois, toque em **Jogar via Bluetooth**, escolha **Criar mesa** em um e **Entrar na mesa** no outro, selecionando o par correto. Conceda acesso a dispositivos próximos se solicitado. A mesa abre quando os dois lados confirmam; compras, baixas, extensões, descartes, morto, canastras e pontuação são sincronizados sem internet.
 
-O diagnóstico fecha a conexão ao sair do aplicativo ou girar a tela. É possível abrir outra conexão; isso ainda não é recuperação de partida. A validação de rádio e desempenho requer os aparelhos físicos descritos em [docs/VALIDACAO.md](docs/VALIDACAO.md).
+Os botões **Receber conexão**, **Entrar na conexão** e **Testar ida e volta** continuam disponíveis para diagnóstico do rádio. A validação de rádio, permissões, OEM e desempenho requer os aparelhos físicos descritos em [docs/VALIDACAO.md](docs/VALIDACAO.md).
+
+O protótipo fecha a conexão ao sair do aplicativo ou girar a tela; reconexão/retomada de mesa fica para uma etapa posterior.
 
 ## Documentação
 
