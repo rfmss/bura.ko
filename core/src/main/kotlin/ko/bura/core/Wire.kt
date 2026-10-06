@@ -7,7 +7,7 @@ import java.io.InputStream
 import java.io.OutputStream
 
 class ProtocolException(message: String) : IOException(message)
-enum class MessageType(val code: Int) { HELLO(1), READY(2), PING(3), PONG(4) }
+enum class MessageType(val code: Int) { HELLO(1), READY(2), PING(3), PONG(4), STATE(5), COMMAND(6), ERROR(7) }
 data class Frame(val type: MessageType, val sequence: Int, val payload: ByteArray = byteArrayOf())
 
 /** Length-delimited binary frames; bounded allocation, no object deserialization. */

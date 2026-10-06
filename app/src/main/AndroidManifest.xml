@@ -11,5 +11,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".LocalGameActivity" android:screenOrientation="portrait" />
+        <activity android:name=".BluetoothGameActivity" android:screenOrientation="portrait" />
     </application>
 </manifest>

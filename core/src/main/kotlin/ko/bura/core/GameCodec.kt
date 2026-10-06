@@ -31,5 +31,14 @@ object GameCodec {
     }
     fun command(command: GameCommand): ByteArray = out { writeInt(MAGIC); writeInt(command.revision); writeInt(command.sequence); writeByte(command.action.ordinal); writeByte(command.meld); writeByte(command.cards.size); command.cards.forEach { writeByte(it) } }
     fun readCommand(bytes: ByteArray): GameCommand = input(bytes) { require(readInt() == MAGIC); val revision = readInt(); val sequence = readInt(); val action = GameAction.entries[readUnsignedByte()]; val meld = readByte().toInt(); val cards = List(readUnsignedByte()) { readUnsignedByte() }; GameCommand(revision, sequence, action, cards, meld) }
+    fun view(v: GameView): ByteArray = out {
+        writeInt(MAGIC); writeUTF(v.id); writeInt(v.revision); writeByte(v.player); cards(v.hand); writeByte(v.opponentCards); writeByte(v.deadCount); writeByte(v.stockCount); cards(v.discard)
+        writeByte(v.melds[0].size); writeByte(v.melds[1].size); v.melds.flatten().forEach { cards(it) }
+        v.tookDead.forEach(::writeBoolean); writeByte(v.turn); writeBoolean(v.drew); writeByte(v.phase.ordinal); v.totals.forEach(::writeInt); v.roundScores.forEach(::writeInt); writeInt(v.finisher); writeInt(v.sequence); v.votes.forEach(::writeBoolean)
+    }
+    fun readView(bytes: ByteArray): GameView = input(bytes) {
+        require(readInt() == MAGIC); val id = readUTF(); val revision = readInt(); val player = readUnsignedByte(); val hand = cards(); val opponent = readUnsignedByte(); val dead = readUnsignedByte(); val stock = readUnsignedByte(); val discard = cards()
+        val first = readUnsignedByte(); val second = readUnsignedByte(); val flat = List(first + second) { cards() }; val took = List(2) { readBoolean() }; val turn = readUnsignedByte(); val drew = readBoolean(); val phase = GamePhase.entries[readUnsignedByte()]; val totals = List(2) { readInt() }; val scores = List(2) { readInt() }; val finisher = readInt(); val sequence = readInt(); val votes = List(2) { readBoolean() }
+        GameView(id, revision, player, hand, opponent, dead, stock, discard, listOf(flat.take(first), flat.drop(first)), took, turn, drew, phase, totals, scores, finisher, sequence, votes)
+    }
 }
-

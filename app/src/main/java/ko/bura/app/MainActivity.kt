@@ -36,6 +36,7 @@ class MainActivity : Activity() {
     private lateinit var hand: LinearLayout
     private var probe: BluetoothProbe? = null
     private var pendingHost: Boolean? = null
+    private var pendingGameRole: Boolean? = null
     private val adapter: BluetoothAdapter? get() = getSystemService(BluetoothManager::class.java)?.adapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +85,8 @@ class MainActivity : Activity() {
         page.addView(action("Jogar no mesmo celular", true) {
             startActivity(Intent(this, LocalGameActivity::class.java))
         })
-        page.addView(label("Partida completa local disponível; o transporte Bluetooth entra na próxima atualização do mesmo motor.", 12, muted))
+        page.addView(action("Jogar via Bluetooth", false) { chooseGameRole() })
+        page.addView(label("Partida local e partida Bluetooth usam o mesmo motor e as mesmas regras.", 12, muted))
         gap(page, 8)
         page.addView(action("1. Parear celulares", false) {
             try { startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS)) }
@@ -145,13 +147,36 @@ class MainActivity : Activity() {
             status.text = "Permita acesso a dispositivos próximos para conectar."
         }
     }
+    private fun chooseGameRole() {
+        AlertDialog.Builder(this).setTitle("Qual celular cria a mesa?")
+            .setItems(arrayOf("Criar mesa (anfitrião)", "Entrar na mesa")) { _, which -> chooseGamePeer(which == 0) }
+            .setNegativeButton("Cancelar", null).show()
+    }
+    private fun chooseGamePeer(host: Boolean) {
+        if (Build.VERSION.SDK_INT >= 31 && checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            pendingGameRole = host; requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT), 1); return
+        }
+        try {
+            val bluetooth = adapter
+            if (bluetooth == null || !bluetooth.isEnabled) { status.text = "Ative o Bluetooth nas configurações."; return }
+            val peers = bluetooth.bondedDevices.sortedBy { it.name ?: it.address }
+            if (peers.isEmpty()) { status.text = "Pareie os celulares primeiro."; return }
+            AlertDialog.Builder(this).setTitle("Escolha o outro celular")
+                .setItems(peers.map { "${it.name ?: "Celular"}\n${it.address}" }.toTypedArray()) { _, index ->
+                    startActivity(Intent(this, BluetoothGameActivity::class.java).putExtra("host", host).putExtra("peer", peers[index].address))
+                }.setNegativeButton("Cancelar", null).show()
+        } catch (_: SecurityException) { status.text = "Conceda acesso a dispositivos próximos." }
+    }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         val host = pendingHost
+        val game = pendingGameRole
         pendingHost = null
+        pendingGameRole = null
         if (requestCode == 1 && host != null) {
             if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) choosePeer(host)
             else status.text = "Permissão negada. Você pode concedê-la nas configurações do aplicativo."
+        } else if (requestCode == 1 && game != null && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) chooseGamePeer(game)
         }
     }
     override fun onStop() {

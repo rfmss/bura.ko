@@ -1,4 +1,3 @@
-
 # Validação — fundação 0.1
 
 ## Executado em 2026-10-05
@@ -40,4 +39,3 @@ Após a implementação do motor e do modo local, o CI passou em `:core:check`, 
 ## Próxima implementação
 
 Motor de turnos conforme REGRAS.md, testes de todas as zonas e atomicidade, projeção filtrada por jogador; em seguida armazenamento transacional e integração Bluetooth. A prova física M0 permanece gate para investir em arte final e declarar multiplayer validado.
-
