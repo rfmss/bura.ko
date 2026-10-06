@@ -23,7 +23,7 @@ class GameBluetoothLink(private val adapter: BluetoothAdapter, private val peer:
     fun start() {
         Thread({
             try {
-                val channel: BluetoothSocket
+                var channel: BluetoothSocket? = null
                 if (host) {
                     val listener = adapter.listenUsingRfcommWithServiceRecord("bura.ko", BluetoothProbe.SERVICE)
                     server = listener
@@ -37,9 +37,10 @@ class GameBluetoothLink(private val adapter: BluetoothAdapter, private val peer:
                     channel = peer.createRfcommSocketToServiceRecord(BluetoothProbe.SERVICE)
                     socket = channel; channel.connect()
                 }
-                if (closed.get()) { channel.close(); return@Thread }
-                socket = channel; connected()
-                while (!closed.get()) received(Wire.read(channel.inputStream))
+                val connectedChannel = channel ?: return@Thread
+                if (closed.get()) { connectedChannel.close(); return@Thread }
+                socket = connectedChannel; connected()
+                while (!closed.get()) received(Wire.read(connectedChannel.inputStream))
             } catch (error: Exception) { if (!closed.get()) failed(error.message ?: "Bluetooth desconectado") }
         }, "bura-game-link").start()
     }

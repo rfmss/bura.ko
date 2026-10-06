@@ -145,7 +145,6 @@ class MainActivity : Activity() {
                 }.setNegativeButton("Cancelar", null).show()
         } catch (_: SecurityException) {
             status.text = "Permita acesso a dispositivos próximos para conectar."
-        }
     }
     private fun chooseGameRole() {
         AlertDialog.Builder(this).setTitle("Qual celular cria a mesa?")
