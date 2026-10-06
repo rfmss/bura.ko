@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.*
@@ -68,7 +69,7 @@ class BluetoothGameActivity : Activity() {
         page.addView(button("Descartar", false, v.myTurn && v.drew && selected.size == 1) { act(GameAction.DISCARD, selected.toList()) })
     }
     private fun status(value: String) { if (::page.isInitialized) page.addView(text(value, 14, 0xFFE5C584.toInt(), false)) }
-    private fun text(value: String, size: Int, color: Int, bold: Boolean) = TextView(this).apply { text = value; textSize = size.toFloat(); setTextColor(color); if (bold) setTypeface(typeface, 1); setPadding(0, 10, 0, 10) }
+    private fun text(value: String, size: Int, color: Int, bold: Boolean) = TextView(this).apply { text = value; textSize = size.toFloat(); setTextColor(color); if (bold) setTypeface(typeface, Typeface.BOLD); setPadding(0, 10, 0, 10) }
     private fun button(value: String, primary: Boolean, enabled: Boolean = true, action: () -> Unit) = Button(this).apply { text = value; isAllCaps = false; isEnabled = enabled; alpha = if (enabled) 1f else .4f; setTextColor(if (primary) Color.rgb(16,45,43) else 0xFFF5EFDF.toInt()); setOnClickListener { action() } }
     override fun onDestroy() { link?.close(); super.onDestroy() }
 }
