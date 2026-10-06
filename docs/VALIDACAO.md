@@ -1,3 +1,4 @@
+
 # Validação — fundação 0.1
 
 ## Executado em 2026-10-05
@@ -20,7 +21,11 @@ Revisão de concorrência: identificado e corrigido o caso de timeout cancelado 
 
 ## Não executado / não reivindicado
 
-Não há dois aparelhos Bluetooth acessíveis neste ambiente. Pareamento, OEMs, rádio, diálogos de permissão, visual, TalkBack, rotações, morte real de processo e métricas de memória/fluidez/inicialização ainda precisam de hardware. O app não contém o motor de turnos nem persistência de partida. Reconectar o diagnóstico abre uma conexão nova, não restaura um jogo.
+Não há dois aparelhos Bluetooth acessíveis neste ambiente. Pareamento, OEMs, rádio, diálogos de permissão, visual, TalkBack, rotações, morte real de processo e métricas de memória/fluidez/inicialização ainda precisam de hardware. O app já contém o motor de turnos, persistência de partida e modo pass-and-play local. Reconectar o diagnóstico abre uma conexão nova, não restaura uma partida compartilhada entre aparelhos.
+
+## Executado em 2026-10-06
+
+Após a implementação do motor e do modo local, o CI passou em `:core:check`, `:app:assembleDebug` e `:app:lintDebug`. O artefato `burako-debug` foi publicado no workflow 37405343942, associado ao commit `140dc2a782b9c8a32a4bc71422efed43022f1b4a`; tamanho do ZIP 886.527 bytes. O APK pode ser baixado na execução do workflow. O checksum do artefato remoto é `sha256:618abb69f639003436660bebd9dd6d98a9a55e7d6425dedcd6c17deef593e57c7`.
 
 ## Roteiro físico obrigatório para M0
 
@@ -35,3 +40,4 @@ Não há dois aparelhos Bluetooth acessíveis neste ambiente. Pareamento, OEMs, 
 ## Próxima implementação
 
 Motor de turnos conforme REGRAS.md, testes de todas as zonas e atomicidade, projeção filtrada por jogador; em seguida armazenamento transacional e integração Bluetooth. A prova física M0 permanece gate para investir em arte final e declarar multiplayer validado.
+
