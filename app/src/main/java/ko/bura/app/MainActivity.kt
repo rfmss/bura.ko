@@ -145,6 +145,7 @@ class MainActivity : Activity() {
                 }.setNegativeButton("Cancelar", null).show()
         } catch (_: SecurityException) {
             status.text = "Permita acesso a dispositivos próximos para conectar."
+        }
     }
     private fun chooseGameRole() {
         AlertDialog.Builder(this).setTitle("Qual celular cria a mesa?")
@@ -176,7 +177,6 @@ class MainActivity : Activity() {
             if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) choosePeer(host)
             else status.text = "Permissão negada. Você pode concedê-la nas configurações do aplicativo."
         } else if (requestCode == 1 && game != null && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) chooseGamePeer(game)
-        }
     }
     override fun onStop() {
         super.onStop()
