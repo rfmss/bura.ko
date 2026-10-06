@@ -81,6 +81,11 @@ class MainActivity : Activity() {
         gap(page, 8)
         page.addView(label("Instale nos dois Androids e pareie-os nas configurações. Volte aqui: um recebe, o outro entra. Esta versão testa a conexão; a partida completa vem na próxima etapa.", 15, muted))
         gap(page, 16)
+        page.addView(action("Jogar no mesmo celular", true) {
+            startActivity(Intent(this, LocalGameActivity::class.java))
+        })
+        page.addView(label("Partida completa local disponível; o transporte Bluetooth entra na próxima atualização do mesmo motor.", 12, muted))
+        gap(page, 8)
         page.addView(action("1. Parear celulares", false) {
             try { startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS)) }
             catch (_: android.content.ActivityNotFoundException) { status.text = "Abra Bluetooth nas configurações do celular." }

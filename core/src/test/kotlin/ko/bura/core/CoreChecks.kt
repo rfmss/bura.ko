@@ -124,4 +124,20 @@ fun main() {
         check(host.lastPong == 1)
     }
     println("$checks checks passed")
+    gameChecks()
+}
+
+private fun gameChecks() {
+    var state = GameEngine.create(Random(7))
+    check(state.hands.all { it.size == 11 })
+    val first = state.view(0)
+    state = GameEngine.apply(state, 0, GameCommand(state.revision, 1, GameAction.DRAW_STOCK))
+    check(state.hands[0].size == 12 && state.stock.size == 58)
+    val replay = GameEngine.apply(state, 0, GameCommand(first.revision, 1, GameAction.DRAW_STOCK))
+    check(replay == state)
+    val card = state.hands[0].first().id
+    state = GameEngine.apply(state, 0, GameCommand(state.revision, 2, GameAction.DISCARD, listOf(card)))
+    check(state.turn == 1 && !state.drew)
+    GameEngine.validate(state)
+    println("PASS game engine transaction, replay and invariants")
 }
